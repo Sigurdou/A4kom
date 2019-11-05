@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-//Hei hei hilsen samuel
+//Hei hei hilsen sigurd
 
 public class TCPClient {
     private PrintWriter toServer;
@@ -86,9 +86,14 @@ public class TCPClient {
      * @return true on success, false otherwise
      */
     private boolean sendCommand(String cmd) {
-        // TODO Step 2: Implement this method
-        // Hint: Remember to check if connection is active
-        return false;
+        Boolean isCommandSent = false;
+
+        if (isConnectionActive()) {
+            this.toServer.println(cmd);
+            isCommandSent = true;
+        }
+
+        return isCommandSent;
     }
 
     /**
