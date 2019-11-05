@@ -23,10 +23,25 @@ public class TCPClient {
      * @return True on success, false otherwise
      */
     public boolean connect(String host, int port) {
-        // TODO Step 1: implement this method
-        // Hint: Remember to process all exceptions and return false on error
-        // Hint: Remember to set up all the necessary input/output stream variables
-        return false;
+        try {
+            this.connection = new Socket(host, port);
+            System.out.println("Connected to: " + host + " " + port);
+
+            OutputStream out = this.connection.getOutputStream();
+            this.toServer = new PrintWriter(out, true);
+
+            InputStream in = this.connection.getInputStream();
+            this.fromServer = new BufferedReader(new InputStreamReader(in));
+        }
+        
+        catch (IOException e) {
+            System.out.println("Exception: " + e.getMessage());
+        }
+        catch (NullPointerException e) {
+            System.out.println("Exception: " + e.getMessage());
+        }
+        return connection.isConnected();
+
     }
 
     /**
@@ -39,8 +54,19 @@ public class TCPClient {
      * that no two threads call this method in parallel.
      */
     public synchronized void disconnect() {
-        // TODO Step 4: implement this method
-        // Hint: remember to check if connection is active
+        if (isConnectionActive()) {
+            try {
+                connection.close();
+                connection = null;
+            }
+            catch (IOException e) {
+                System.out.println("Exception: " + e.getMessage());
+            }
+            catch (NullPointerException e) {
+                System.out.println("exception: " + e.getMessage());
+            }
+        }
+
     }
 
     /**
