@@ -5,6 +5,9 @@ import java.net.*;
 import java.util.LinkedList;
 import java.util.List;
 
+
+//Hei hei hilsen samuel
+
 public class TCPClient {
     private PrintWriter toServer;
     private BufferedReader fromServer;
