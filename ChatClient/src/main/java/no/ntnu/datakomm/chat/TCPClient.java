@@ -106,7 +106,7 @@ public class TCPClient {
         Boolean sentStatus = false;
 
         if(isConnectionActive()) {
-            sendCommand("msg" + message)
+            sendCommand("msg" + message);
             sentStatus = true;
         }
         return sentStatus;
@@ -118,8 +118,9 @@ public class TCPClient {
      * @param username Username to use
      */
     public void tryLogin(String username) {
-        // TODO Step 3: implement this method
-        // Hint: Reuse sendCommand() method
+        if (username != null) {
+            sendCommand("login " + username);
+        }
     }
 
     /**
