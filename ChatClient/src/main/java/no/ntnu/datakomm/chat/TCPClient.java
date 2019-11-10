@@ -5,17 +5,11 @@ import java.net.*;
 import java.util.LinkedList;
 import java.util.List;
 
-
-//Hei hei hilsen sigurd
-
 public class TCPClient {
     private PrintWriter toServer;
     private BufferedReader fromServer;
     private Socket connection;
-
-    // Hint: if you want to store a message for the last error, store it here
     private String lastError = null;
-
     private final List<ChatListener> listeners = new LinkedList<>();
 
     /**
@@ -36,7 +30,6 @@ public class TCPClient {
             InputStream in = this.connection.getInputStream();
             this.fromServer = new BufferedReader(new InputStreamReader(in));
         }
-        
         catch (IOException e) {
             System.out.println("Exception: " + e.getMessage());
         }
@@ -44,7 +37,6 @@ public class TCPClient {
             System.out.println("Exception: " + e.getMessage());
         }
         return connection.isConnected();
-
     }
 
     /**
@@ -69,7 +61,6 @@ public class TCPClient {
                 System.out.println("exception: " + e.getMessage());
             }
         }
-
     }
 
     /**
@@ -92,7 +83,6 @@ public class TCPClient {
             this.toServer.println(cmd);
             isCommandSent = true;
         }
-
         return isCommandSent;
     }
 
@@ -129,7 +119,7 @@ public class TCPClient {
      */
     public void refreshUserList() {
         if (isConnectionActive()){
-            sendCommand("users: ")
+            sendCommand("users: ");
         }
     }
 
@@ -150,16 +140,14 @@ public class TCPClient {
         return sentStatus;
     }
 
-
     /**
      * Send a request for the list of commands that server supports.
      */
     public void askSupportedCommands() {
         if(isConnectionActive()) {
-            sendCommand("help")
+            sendCommand("help");
         }
     }
-
 
     /**
      * Wait for chat server's response
@@ -196,7 +184,6 @@ public class TCPClient {
      * Start listening for incoming commands from the server in a new CPU thread.
      */
     public void startListenThread() {
-        // Call parseIncomingCommands() in the new thread.
         Thread t = new Thread(() -> {
             parseIncomingCommands();
         });
@@ -232,8 +219,7 @@ public class TCPClient {
                         String users = response[1] + " " + response[2];
                         String[] userArray = users.split(" ");
                         onUsersList(userArray);
-                    }
-                    else {
+                    } else {
                         String users = response[1];
                         String[] userArray = users.split(" ");
                         onUsersList(userArray);
@@ -241,7 +227,7 @@ public class TCPClient {
                     break;
 
                 case "text":
-                    onMsgReceived(false,response[1],response[2]);
+                    onMsgReceived(false, response[1], response[2]);
                     System.out.println(response[1] + " " + response[2]);
                     break;
 
@@ -249,8 +235,8 @@ public class TCPClient {
                     onMsgReceived(true, response[1], response[2]);
                     break;
 
-                case "texterror" :
-                    onMsgError(response[1] + " " +  response[2]);
+                case "texterror":
+                    onMsgError(response[1] + " " + response[2]);
                     break;
 
                 case "cmderror":
@@ -266,6 +252,7 @@ public class TCPClient {
                 default:
                     break;
 
+            }
         }
     }
 
@@ -312,11 +299,11 @@ public class TCPClient {
      * Notify listeners that socket was closed by the remote end (server or
      * Internet error)
      */
-    private void onDisconnect() {
-        for (ChatListener 1 : listeners) {
-            1.onDisconnect();
+        private void onDisconnect() {
+            for (ChatListener l : listeners) {
+                l.onDisconnect();
             }
-    }
+        }
 
     /**
      * Notify listeners that server sent us a list of currently connected users
@@ -324,8 +311,8 @@ public class TCPClient {
      * @param users List with usernames
      */
     private void onUsersList(String[] users) {
-        for(ChatListener 1 : listeners) {
-            1.onUserList(users);
+        for(ChatListener l : listeners) {
+            l.onUserList(users);
             }
     }
 
@@ -337,9 +324,9 @@ public class TCPClient {
      * @param text   Message text
      */
     private void onMsgReceived(boolean priv, String sender, String text) {
-        for(ChatListener 1 : listeners) {
+        for(ChatListener l : listeners) {
             TextMessage textMessage = new TextMessage(sender, priv, text);
-            1.onMessage Received(textMessage);
+            l.onMessageReceived(textMessage);
             }
     }
 
@@ -349,7 +336,9 @@ public class TCPClient {
      * @param errMsg Error description returned by the server
      */
     private void onMsgError(String errMsg) {
-        // TODO Step 7: Implement this method
+        for (ChatListener l : listeners) {
+            l.onMessageError(errMsg);
+        }
     }
 
     /**
@@ -358,7 +347,9 @@ public class TCPClient {
      * @param errMsg Error message
      */
     private void onCmdError(String errMsg) {
-        // TODO Step 7: Implement this method
+        for (ChatListener l : listeners) {
+            l.onCommandError(errMsg);
+        }
     }
 
     /**
@@ -368,6 +359,8 @@ public class TCPClient {
      * @param commands Commands supported by the server
      */
     private void onSupported(String[] commands) {
-        // TODO Step 8: Implement this method
+        for (ChatListener l : listeners) {
+            l.onSupportedCommands(commands);
+        }
     }
 }
