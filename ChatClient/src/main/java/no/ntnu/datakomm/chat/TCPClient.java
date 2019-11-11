@@ -96,7 +96,7 @@ public class TCPClient {
         boolean sentStatus = false;
 
         if(isConnectionActive()) {
-            sendCommand("text" + message);
+            sendCommand("msg " + message);
             sentStatus = true;
         }
         return sentStatus;
@@ -134,7 +134,7 @@ public class TCPClient {
         boolean sentStatus = false;
 
         if (isConnectionActive()) {
-            sendCommand("privtext " + recipient + " " + message);
+            sendCommand("privmsg " + recipient + " " + message);
             sentStatus = true;
         }
         return sentStatus;
@@ -208,7 +208,7 @@ public class TCPClient {
                     System.out.println("Server logged in");
                     break;
 
-                case "loginerror":
+                case "loginerr":
                     onLoginResult(false, response[1]);
                     System.out.println("server: " + response[1]);
                     break;
@@ -226,20 +226,20 @@ public class TCPClient {
                     }
                     break;
 
-                case "text":
+                case "msg":
                     onMsgReceived(false, response[1], response[2]);
                     System.out.println(response[1] + " " + response[2]);
                     break;
 
-                case "privtext":
+                case "privmsg":
                     onMsgReceived(true, response[1], response[2]);
                     break;
 
-                case "texterror":
+                case "msgerr":
                     onMsgError(response[1] + " " + response[2]);
                     break;
 
-                case "cmderror":
+                case "cmderr":
                     onCmdError(response[1]);
                     break;
 
