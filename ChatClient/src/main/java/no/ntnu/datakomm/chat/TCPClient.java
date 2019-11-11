@@ -119,7 +119,7 @@ public class TCPClient {
      */
     public void refreshUserList() {
         if (isConnectionActive()){
-            sendCommand("users: ");
+            sendCommand("users ");
         }
     }
 
@@ -213,7 +213,7 @@ public class TCPClient {
                     System.out.println("server: " + response[1]);
                     break;
 
-                case "userlist":
+                case "users":
                     if (response[2] != null) {
 
                         String users = response[1] + " " + response[2];
